@@ -3,8 +3,8 @@
 * Set personal information
 
 #+BEGIN_SRC emacs-lisp
-  (setq user-full-name "Steffen Roskamp"
-        user-mail-address "steffen.roskamp@gmail.com")
+  (setq user-full-name "Christoph Meier"
+        user-mail-address "christoph.cm.meier@gmail.com")
 #+END_SRC
 * Package management
 
@@ -118,7 +118,7 @@ Disable toolbar, menubar and scrollbars
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-screen t)
   (tool-bar-mode 0)
-  (menu-bar-mode 0)
+  (menu-bar-mode 1)
   (scroll-bar-mode -1)
 #+END_SRC
 ** Use fancy symbols
@@ -256,6 +256,24 @@ function at point.
     :config (elpy-enable))
 
 #+END_SRC
+
+
+Use pyenv
+#+BEGIN_SRC emacs-lisp
+  (use-package pyenv-mode
+    :init
+    (setenv "WORKON_HOME" "D:/ProgramData/Miniconda3/envs")
+    :config
+    (pyenv-mode))
+
+#+END_SRC
+
+
+Use iPython as interpreter
+#+BEGIN_SRC emacs-lisp
+  (setq python-shell-interpreter "ipython"
+    python-shell-interpreter-arg "-i")
+#+END_SRC
 ** Latex
 
 Get auctex and enable spellchecking in tex files
@@ -273,7 +291,7 @@ Enable call to Nomenclature first when compiling Latex
 #+BEGIN_SRC emacs-lisp
   (eval-after-load "tex"
     '(add-to-list 'TeX-command-list
-                  '("Nomenclature" "makeindex %s.nlo -s nomencl.ist -o %s.nls"
+                  '("Nomenclature" "makeindex %s.nlo -s nomentbl.ist -o %s.nls"
                     (lambda (name command file)
                       (TeX-run-compile name command file)
                       (TeX-process-set-variable file 'TeX-command-next TeX-command-default))
@@ -300,6 +318,23 @@ Enable math handling and always set the current file as the main one.
             (lambda ()
               (LaTeX-math-mode)
               (setq TeX-master nil)))
+#+END_SRC
+
+Set the default PDF reader to SumatraPDF
+
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-view-style (quote (("^epsf$" "SumatraPDF.exe %f") ("." "yap -1 %dS %d"))))
+#+END_SRC
+
+Setup for Sumatra-Syncview
+
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-output-view-style
+      (quote
+       (("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "dvips %d -o && start %f")
+        ("^dvi$" "." "yap -1 %dS %d")
+        ("^pdf$" "." "SumatraPDF.exe -reuse-instance %o")
+        ("^html?$" "." "start %o"))))
 #+END_SRC
 ** Text
 
@@ -363,11 +398,11 @@ Additional, rarely used modes
 	       (global-set-key (kbd "C-c c") 'org-capture)
 
 	       (setq org-capture-templates
-		     '(("t" "Task" entry (file+headline "~/org/org.org" "Tasks")
+		     '(("t" "Task" entry (file+headline "~/org.org" "Tasks")
 			"* TODO %^{Title}\n  SCHEDULED: %^{Schedule}t\n\n  %?\n\n  %i\n")
-		       ("n" "Note" entry (file+headline "~/org/org.org" "Notes")
+		       ("n" "Note" entry (file+headline "~/org.org" "Notes")
 			"* Note: %^{Title}\n  %?\n  %i\n")
-		       ("s" "Stuff" entry (file+headline "~/org/org.org" "Stuff")
+		       ("s" "Stuff" entry (file+headline "~/org.org" "Stuff")
 			"* %^{Title}\n\n  %i\n  %?\n")))
    #+END_SRC
 
@@ -380,11 +415,11 @@ Additional, rarely used modes
    #+END_SRC
 
    Org agenda shows TODO tasks, appointments, etc. It loads this information from the master org-file in
-   ~/org/org.org. C-c a can be used to see this week's overview. To see an overview over all TODOs in that file, use
+   ~/org.org. C-c a can be used to see this week's overview. To see an overview over all TODOs in that file, use
    C-c t.
 
    #+BEGIN_SRC emacs-lisp
-     (setq org-agenda-files '("~/org/org.org"))
+     (setq org-agenda-files '("~/org.org"))
 
      (global-set-key (kbd "C-c a") 'org-agenda-list)
      (global-set-key (kbd "C-c t") 'org-todo-list)
@@ -543,7 +578,7 @@ Include minted package in Latex exports
   (global-set-key (kbd "M-x") 'smex)
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 #+END_SRC
-** flyspell
+** COMMENT flyspell
 
 Use flyspell in text buffers
 
@@ -618,6 +653,7 @@ Use =avy= to jump to specific lines or words, use ace-window to switch between w
 #+BEGIN_SRC emacs-lisp
   (use-package transfer-sh)
 #+END_SRC
+
 ** undo-tree
    #+BEGIN_SRC emacs-lisp
      (use-package undo-tree
@@ -638,6 +674,17 @@ Use =avy= to jump to specific lines or words, use ace-window to switch between w
      (use-package ebib
        :config (setq ebib-bibtex-dialect 'biblatex))
    #+END_SRC
+
+Enable delete-selection-mode
+
+#+BEGIN_SRC emacs-lisp
+  (delete-selection-mode 1)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<kp-decimal>") ",")
+#+END_SRC
+
 * Additional keybindings
 
 #+BEGIN_SRC emacs-lisp
